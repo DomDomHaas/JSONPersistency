@@ -4,3 +4,6 @@ ProjectSettings/
 Assets/AssetStoreTools/
 Assets/AssetStoreTools.meta
 Temp/
+*.csproj
+*.sln
+*.userprefs

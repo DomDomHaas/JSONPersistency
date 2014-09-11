@@ -211,6 +211,11 @@ namespace SimpleJSON
 				internal static string Escape (string aText)
 				{
 						string result = "";
+
+						if (string.IsNullOrEmpty (aText)) {
+								return result;
+						}
+
 						foreach (char c in aText) {
 								switch (c) {
 								case '\\':
@@ -675,6 +680,7 @@ namespace SimpleJSON
 		public class JSONClass : JSONNode, IEnumerable
 		{
 				private Dictionary<string,JSONNode> m_Dict = new Dictionary<string,JSONNode> ();
+
 				public override JSONNode this [string aKey] {
 						get {
 								if (m_Dict.ContainsKey (aKey))
@@ -837,7 +843,9 @@ namespace SimpleJSON
 				public override void Serialize (System.IO.BinaryWriter aWriter)
 				{
 						var tmp = new JSONData ("");
- 
+
+						UnityEngine.Debug.Log (m_Data);
+
 						tmp.AsInt = AsInt;
 						if (tmp.m_Data == this.m_Data) {
 								aWriter.Write ((byte)JSONBinaryTag.IntValue);
@@ -863,8 +871,13 @@ namespace SimpleJSON
 								aWriter.Write (AsBool);
 								return;
 						}
+
 						aWriter.Write ((byte)JSONBinaryTag.Value);
-						aWriter.Write (m_Data);
+						if (string.IsNullOrEmpty (m_Data)) {
+								aWriter.Write ("");
+						} else {
+								aWriter.Write (m_Data);
+						}
 				}
 		} // End of JSONData
  
