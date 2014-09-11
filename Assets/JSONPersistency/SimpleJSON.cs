@@ -844,8 +844,6 @@ namespace SimpleJSON
 				{
 						var tmp = new JSONData ("");
 
-						UnityEngine.Debug.Log (m_Data);
-
 						tmp.AsInt = AsInt;
 						if (tmp.m_Data == this.m_Data) {
 								aWriter.Write ((byte)JSONBinaryTag.IntValue);
