@@ -11,46 +11,52 @@ public abstract class JSONPersistent : MonoBehaviour
 		/// </summary>
 		protected string fileName;
 
-		[Serializable]
-		public abstract class JSONPersistentData
-		{
+		/// <summary>
+		/// The identifier don't change
+		/// </summary>
+		private int id = -1;
 
-		};
-
-/* example: 
-
-    [Serializable]
-	public class data
-	{
-		[SerializeField]
-		public float
-			startRange; 
-
-		[SerializeField]
-		public float
-			endRange;
-
-		[SerializeField]
-		public float
-			minimumValue; 
-
-	}
-*/
-
+		public bool loadOnAwake = true;
+		public bool saveOnDestroy = false;
 
 		protected void Awake ()
 		{
-				fileName = getFileName ();	
+				init ();
+		}
+
+		/// <summary>
+		/// Init this instance, it's public so it can be called from a InspectorScript
+		/// </summary>
+		public void init ()
+		{
+				if (id == -1) {
+						id = JSONPersistor.GetLocalIdentfier (this.gameObject);
+				}
+
+				fileName = getFileName ();
+		
+				if (loadOnAwake && FileExists ()) {
+						//Debug.Log ("file exists: " + fileName);
+						load ();
+				}
+		}
+
+		private void OnDestroy ()
+		{
+				if (saveOnDestroy) {
+						save ();
+				}
+				//JSONPersistor.Instance.killInstanceID (this.id);
 		}
 
 		public bool FileExists ()
 		{
-				return JSONPersistor.Instance.fileExists (getFileName ());
+				return JSONPersistor.Instance.fileExists (fileName);
 		}
 
-		public virtual string getFileName ()
+		private string getFileName ()
 		{
-				return this.gameObject.name + "_" + GetInstanceID ();
+				return this.gameObject.name + "_" + this.id;
 		}
 	
 		public abstract JSONClass getDataClass ();
@@ -89,14 +95,56 @@ public abstract class JSONPersistent : MonoBehaviour
 
 		public virtual void save ()
 		{
-				//string jsonString = Serialize (myData);
-				JSONPersistor.Instance.saveToFile (fileName, getDataClass ());
+				JSONClass jClass = getDataClass ();
+				jClass ["guid"].AsInt = this.id;
+				JSONPersistor.Instance.saveToFile (fileName, jClass);
 				//Debug.Log ("saved " + fileName);
 		}
 
 		public virtual void load ()
 		{
 				JSONClass jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
+				//this.id = new Guid (jClass ["guid"].Value);
+
+				if (!string.IsNullOrEmpty (jClass ["guid"].Value)) {
+						this.id = jClass ["guid"].AsInt;
+						//this.id = long.Parse (jClass ["guid"].Value.Trim ());
+				}
+
 				setClassData (jClass);
 		}
+
+
+
+
+	#region instance_handling
+
+		private static List<WeakReference> instances = new List<WeakReference> ();
+	
+		public JSONPersistent ()
+		{
+				instances.Add (new WeakReference (this));
+		}
+
+		public static IList<JSONPersistent> GetInstances ()
+		{
+				List<JSONPersistent> realInstances = new List<JSONPersistent> ();
+				List<WeakReference> toDelete = new List<WeakReference> ();
+		
+				foreach (WeakReference reference in instances) {
+						if (reference.IsAlive) {
+								realInstances.Add ((JSONPersistent)reference.Target);
+						} else {
+								toDelete.Add (reference);
+						}
+				}
+		
+				foreach (WeakReference reference in toDelete)
+						instances.Remove (reference);
+		
+				return realInstances;
+		}
+
+	#endregion
+
 }

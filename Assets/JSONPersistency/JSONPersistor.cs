@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System;
 using System.IO;
 using System.Text; 
 using SimpleJSON;
+using System.Reflection;
+using UnityEditor;
 
 public class JSONPersistor
 {
@@ -14,18 +18,34 @@ public class JSONPersistor
 		public static readonly string nextEntry = ",";
 		public static readonly string separator = ":";
 
-		private static readonly JSONPersistor instance = new JSONPersistor ();
-	
+		private static JSONPersistor instance = null;
+
+/*		private int instanceCount = 0;
+
+		private IDictionary<int, string> fileInstances = new Dictionary<int, string> ();
+		private IDictionary<int, int> gameObjectInstances = new Dictionary<int, int> ();
+*/
 		private JSONPersistor ()
 		{
 		}
 	
 		public static JSONPersistor Instance {
 				get {
+						if (instance == null) {
+								instance = new JSONPersistor ();
+						}
 						return instance; 
 				}
 		}
 
+/*		private void loadUpExistingInstances (IList<JSONPersistent> persistents)
+		{
+
+				foreach (JSONPersistent persist in persistents) {
+						registerNewInstance (persist);
+				}
+		}
+*/
 		public delegate void EventHandler (object listener,EventArgs e);
 
 		public event EventHandler gameSaved;
@@ -243,7 +263,27 @@ public class JSONPersistor
 				spr.name = fullPath.Substring (fullPath.LastIndexOf ("/") + 1);
 				return spr;
 		}
+	
+	#endregion
+
+	#region instance_methods
+
+		public static int GetLocalIdentfier (GameObject go)
+		{
+				PropertyInfo inspectorModeInfo = typeof(SerializedObject).GetProperty ("inspectorMode", BindingFlags.NonPublic 
+						| BindingFlags.Instance);
+		
+				SerializedObject serializedObject = new SerializedObject (go);
+				inspectorModeInfo.SetValue (serializedObject, InspectorMode.Debug, null);
+		
+				SerializedProperty localIdProp = serializedObject.FindProperty ("m_LocalIdentfierInFile");
+
+				//Debug.Log ("found property: " + localIdProp.intValue);
+
+				return localIdProp.intValue;
+		}
 
 
 	#endregion
+
 }
