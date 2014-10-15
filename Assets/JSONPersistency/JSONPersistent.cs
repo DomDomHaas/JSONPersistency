@@ -49,6 +49,11 @@ public abstract class JSONPersistent : MonoBehaviour
 				//JSONPersistor.Instance.killInstanceID (this.id);
 		}
 
+		public int getPersistentID ()
+		{
+				return this.id;
+		}
+
 		public bool FileExists ()
 		{
 				return JSONPersistor.Instance.fileExists (fileName);
@@ -96,7 +101,7 @@ public abstract class JSONPersistent : MonoBehaviour
 		public virtual void save ()
 		{
 				JSONClass jClass = getDataClass ();
-				jClass ["guid"].AsInt = this.id;
+				jClass ["id"].AsInt = this.id;
 				JSONPersistor.Instance.saveToFile (fileName, jClass);
 				//Debug.Log ("saved " + fileName);
 		}
@@ -107,7 +112,7 @@ public abstract class JSONPersistent : MonoBehaviour
 				//this.id = new Guid (jClass ["guid"].Value);
 
 				if (!string.IsNullOrEmpty (jClass ["guid"].Value)) {
-						this.id = jClass ["guid"].AsInt;
+						this.id = jClass ["id"].AsInt;
 						//this.id = long.Parse (jClass ["guid"].Value.Trim ());
 				}
 
