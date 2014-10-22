@@ -268,6 +268,21 @@ public class JSONPersistor
 
 	#region instance_methods
 
+		public static int GetLocalIdentfier (Component comp)
+		{
+				PropertyInfo inspectorModeInfo = typeof(SerializedObject).GetProperty ("inspectorMode", BindingFlags.NonPublic 
+						| BindingFlags.Instance);
+		
+				SerializedObject serializedObject = new SerializedObject (comp);
+				inspectorModeInfo.SetValue (serializedObject, InspectorMode.Debug, null);
+		
+				SerializedProperty localIdProp = serializedObject.FindProperty ("m_LocalIdentfierInFile");
+		
+				//Debug.Log ("found property: " + localIdProp.intValue);
+		
+				return localIdProp.intValue;
+		}
+
 		public static int GetLocalIdentfier (GameObject go)
 		{
 				PropertyInfo inspectorModeInfo = typeof(SerializedObject).GetProperty ("inspectorMode", BindingFlags.NonPublic 

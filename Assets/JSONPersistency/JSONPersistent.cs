@@ -30,7 +30,7 @@ public abstract class JSONPersistent : MonoBehaviour
 		public void init ()
 		{
 				if (id == -1) {
-						id = JSONPersistor.GetLocalIdentfier (this.gameObject);
+						id = JSONPersistor.GetLocalIdentfier (this);
 				}
 
 				fileName = getFileName ();
