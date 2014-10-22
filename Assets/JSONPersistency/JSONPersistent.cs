@@ -111,7 +111,7 @@ public abstract class JSONPersistent : MonoBehaviour
 				JSONClass jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
 				//this.id = new Guid (jClass ["guid"].Value);
 
-				if (!string.IsNullOrEmpty (jClass ["guid"].Value)) {
+				if (!string.IsNullOrEmpty (jClass ["id"].Value)) {
 						this.id = jClass ["id"].AsInt;
 						//this.id = long.Parse (jClass ["guid"].Value.Trim ());
 				}
