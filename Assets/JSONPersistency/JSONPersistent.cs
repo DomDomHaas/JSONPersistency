@@ -19,6 +19,8 @@ public abstract class JSONPersistent : MonoBehaviour
 		public bool loadOnAwake = true;
 		public bool saveOnDestroy = false;
 
+		public bool isInit = false;
+
 		protected void Awake ()
 		{
 				init ();
@@ -39,6 +41,8 @@ public abstract class JSONPersistent : MonoBehaviour
 						//Debug.Log ("file exists: " + fileName);
 						load ();
 				}
+
+				isInit = true;
 		}
 
 		private void OnDestroy ()
@@ -108,15 +112,17 @@ public abstract class JSONPersistent : MonoBehaviour
 
 		public virtual void load ()
 		{
-				JSONClass jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
-				//this.id = new Guid (jClass ["guid"].Value);
+				if (JSONPersistor.Instance.fileExists (fileName)) {
+						JSONClass jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
 
-				if (!string.IsNullOrEmpty (jClass ["id"].Value)) {
-						this.id = jClass ["id"].AsInt;
-						//this.id = long.Parse (jClass ["guid"].Value.Trim ());
+						if (!string.IsNullOrEmpty (jClass ["id"].Value)) {
+								this.id = jClass ["id"].AsInt;
+						}
+
+						setClassData (jClass);
+				} else {
+						//Debug.LogError ("File with fileName '" + fileName + "' does not exists!");
 				}
-
-				setClassData (jClass);
 		}
 
 

@@ -13,10 +13,10 @@ public class JSONPersistor
 {
 
 		public static readonly string filePath = "/SaveLoadObjects";
-		public static readonly string startArray = "{";
+/*		public static readonly string startArray = "{";
 		public static readonly string endArray = "}";
 		public static readonly string nextEntry = ",";
-		public static readonly string separator = ":";
+		public static readonly string separator = ":";*/
 
 		private static JSONPersistor instance = null;
 
@@ -68,10 +68,13 @@ public class JSONPersistor
 
 		public void saveToFile (string fileName, JSONClass data)
 		{
-				// save to file already creates directories and the file!
-				data.SaveToFile (getFullFilePath (fileName));
+				if (data.Count <= 0) {
+						throw new UnityException ("saveToFile: JSONClass data is empty!");
+				} else {
+						// SaveToFile already creates directories and the file!
+						data.SaveToFile (getFullFilePath (fileName));
+				}
 		}
-
 		public void saveToFile (string fileName, JSONArray jArray)
 		{
 				/*		if (!directoryExists (Application.dataPath + filePath)) {
@@ -130,7 +133,7 @@ public class JSONPersistor
 		/// <param name="name">Name.</param>
 		/// <param name="aValue">A value.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		public static string getJSONKeyValue<T> (T aValue, string name = "")
+/*		public static string getJSONKeyValue<T> (T aValue, string name = "")
 		{
 				JSONBinaryTag tag = JSONPersistor.GetJSONBinaryTag<T> (aValue);
 				Debug.Log ("tag: " + tag);
@@ -143,25 +146,6 @@ public class JSONPersistor
 
 						return "\"" + tag + "_" + name + "\"" + separator + "\"" + aValue.ToString () + "\"";
 
-/*				} else if (tag == JSONBinaryTag.Array) {
-
-						string arrayStr = name + " [ ";
-						JSONArray arr = (JSONArray)aValue;
-
-						if (arr.Count > 0) {
-								int i = 0;
-								foreach (JSONNode node in arr.Childs) {
-										if (i > 0) {
-												arrayStr += " , ";
-										}
-										arrayStr += node.Value;
-										i++;
-								}
-
-						}
-						arrayStr += " ]";
-
-						return arrayStr;*/
 
 				} else if (tag == JSONBinaryTag.Class) {
 
@@ -171,7 +155,7 @@ public class JSONPersistor
 				}
 
 				return "";
-		}
+		}*/
 
 
 		public static JSONBinaryTag GetJSONBinaryTag<T> (T t)
