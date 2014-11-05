@@ -13,12 +13,17 @@ public class JSONPersistor
 {
 
 		public static readonly string filePath = "/SaveLoadObjects";
+		public static readonly string PersistorFileName = "JSONSaves";
+		private static readonly string persistentClasses = "persist";
+
 /*		public static readonly string startArray = "{";
 		public static readonly string endArray = "}";
 		public static readonly string nextEntry = ",";
 		public static readonly string separator = ":";*/
 
 		private static JSONPersistor instance = null;
+		private Dictionary<string, JSONClass> persistencies = null;
+		private bool isDirty = false;
 
 /*		private int instanceCount = 0;
 
@@ -27,6 +32,7 @@ public class JSONPersistor
 */
 		private JSONPersistor ()
 		{
+				loadPersistenciesFromFile ();
 		}
 	
 		public static JSONPersistor Instance {
@@ -63,7 +69,28 @@ public class JSONPersistor
 
 		public string getFullFilePath (string fileName)
 		{
-				return Application.dataPath + filePath + "//" + fileName + ".txt";
+				return Application.dataPath + filePath + "/" + fileName + ".txt";
+		}
+
+
+		public void savePersitencies (string fileName, JSONClass data)
+		{
+				if (persistencies.ContainsKey (fileName)) {
+						persistencies.Remove (fileName);
+				}
+				persistencies.Add (fileName, data);
+
+				JSONClass savePersistency = new JSONClass ();
+
+				//Debug.Log ("save " + persistencies.Count);
+
+				foreach (KeyValuePair<string, JSONClass> kvp in persistencies) {
+						savePersistency [persistentClasses].Add (kvp.Key, kvp.Value);
+				}
+
+				Debug.Log ("should save " + savePersistency.AsObject.ToString ());
+
+				savePersistency.SaveToFile (getFullFilePath (PersistorFileName));
 		}
 
 		public void saveToFile (string fileName, JSONClass data)
@@ -74,7 +101,9 @@ public class JSONPersistor
 						// SaveToFile already creates directories and the file!
 						data.SaveToFile (getFullFilePath (fileName));
 				}
+
 		}
+
 		public void saveToFile (string fileName, JSONArray jArray)
 		{
 				/*		if (!directoryExists (Application.dataPath + filePath)) {
@@ -87,6 +116,44 @@ public class JSONPersistor
 
 				// save to file already creates directories and the file!
 				jArray.SaveToFile (getFullFilePath (fileName));
+		}
+
+		public JSONClass loadPersistencies (string objname)
+		{
+				Debug.Log ("loadPersistencies " + objname + " from " + persistencies.Count);
+
+				if (persistencies.Count > 0 && persistencies.ContainsKey (objname)) {
+						return persistencies [objname];
+				}
+
+				loadPersistenciesFromFile ();
+
+				if (!persistencies.ContainsKey (objname)) {
+						throw new UnityException ("trying to load '" + objname + "' but it's not in the " + getFullFilePath (PersistorFileName) + " file!");
+				}
+
+				return persistencies [objname];
+		}
+
+		private void loadPersistenciesFromFile ()
+		{
+				persistencies = new Dictionary<string, JSONClass> ();
+
+				//Debug.Log ("loading fileExists " + fileExists (PersistorFileName) + " " + getFullFilePath (PersistorFileName));
+
+				if (fileExists (PersistorFileName)) {
+
+						JSONNode node = JSONNode.LoadFromFile (getFullFilePath (PersistorFileName));
+						JSONClass savePersistency = node.AsObject;
+
+						//Debug.Log ("loading " + savePersistency.Count);
+
+						foreach (string key in savePersistency [persistentClasses].Keys) {
+								persistencies.Add (key, savePersistency [persistentClasses] [key].AsObject);
+								//Debug.Log ("added " + key + " to persistencies");
+						}
+				}
+
 		}
 
 		public JSONClass loadJSONClassFromFile (string fileName)
@@ -261,7 +328,11 @@ public class JSONPersistor
 				inspectorModeInfo.SetValue (serializedObject, InspectorMode.Debug, null);
 		
 				SerializedProperty localIdProp = serializedObject.FindProperty ("m_LocalIdentfierInFile");
-		
+
+				//AssetModificationProcessor pro = new AssetModificationProcessor();
+
+				//AssetModificationProcessor.OnWillSaveAssets(string[])
+
 				//Debug.Log ("found property: " + localIdProp.intValue);
 		
 				return localIdProp.intValue;

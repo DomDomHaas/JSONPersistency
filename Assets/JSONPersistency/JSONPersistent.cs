@@ -37,7 +37,9 @@ public abstract class JSONPersistent : MonoBehaviour
 
 				fileName = getFileName ();
 		
-				if (loadOnAwake && FileExists ()) {
+				if (loadOnAwake
+		    //&& FileExists ()
+		    ) {
 						//Debug.Log ("file exists: " + fileName);
 						load ();
 				}
@@ -106,13 +108,19 @@ public abstract class JSONPersistent : MonoBehaviour
 		{
 				JSONClass jClass = getDataClass ();
 				jClass ["id"].AsInt = this.id;
-				JSONPersistor.Instance.saveToFile (fileName, jClass);
+				//JSONPersistor.Instance.saveToFile (fileName, jClass);
+				JSONPersistor.Instance.savePersitencies (fileName, jClass);
+
 				//Debug.Log ("saved " + fileName);
 		}
 
 		public virtual void load ()
 		{
-				if (JSONPersistor.Instance.fileExists (fileName)) {
+				JSONClass jClass = JSONPersistor.Instance.loadPersistencies (fileName);
+				setClassData (jClass);
+
+
+/*				if (JSONPersistor.Instance.fileExists (fileName)) {
 						JSONClass jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
 
 						if (!string.IsNullOrEmpty (jClass ["id"].Value)) {
@@ -123,10 +131,16 @@ public abstract class JSONPersistent : MonoBehaviour
 				} else {
 						//Debug.LogError ("File with fileName '" + fileName + "' does not exists!");
 				}
+*/
 		}
 
-
-
+		static string[] OnWillSaveAssets (string[] paths)
+		{
+				Debug.Log ("OnWillSaveAssets");
+				foreach (string path in paths)
+						Debug.Log (path);
+				return paths;
+		}
 
 	#region instance_handling
 
