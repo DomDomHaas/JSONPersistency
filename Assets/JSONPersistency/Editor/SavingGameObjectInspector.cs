@@ -5,31 +5,21 @@ using System.Collections;
 using System.Xml.Serialization; 
 
 [CustomEditor(typeof(SavingGameObject))]
-public class SavingGameObjectInspector : Editor
+public class SavingGameObjectInspector : JSONPersitentInspector
 { 
 
-		public float windowHeight = 16;
-		public Rect myGUIRect;
-
-		private SavingGameObject myPersist;
-	
 		[ExecuteInEditMode]
 		public void OnEnable ()
 		{
-				myPersist = target as SavingGameObject;
-
-				if (!myPersist.isInit) {
-						myPersist.init ();
-				}
-
+				base.OnEnable ();
 		}
 
 		public override void OnInspectorGUI ()
 		{    
-				base.DrawDefaultInspector ();
+				base.OnInspectorGUI ();
 
 
-				myGUIRect = GUILayoutUtility.GetRect (Screen.width, windowHeight);
+/*				myGUIRect = GUILayoutUtility.GetRect (Screen.width, windowHeight);
 			
 				EditorGUILayout.BeginHorizontal ();
 
@@ -42,7 +32,7 @@ public class SavingGameObjectInspector : Editor
 				} 
 
 				EditorGUILayout.EndHorizontal ();
-		
+*/		
 		} 
 	
 

@@ -18,7 +18,7 @@ public class SavingGameObject : JSONPersistent
 		new void Awake ()
 		{
 				//mySaveData = new SaveTransform ();
-				base.Awake ();
+				init ();
 		}
 
 		new public void init ()
@@ -53,13 +53,13 @@ public class SavingGameObject : JSONPersistent
 		public override void save ()
 		{
 				base.save ();
-				Debug.Log ("saved");
+				Debug.Log (this + " name " + name + " saved");
 		}
 
 		public override void load ()
 		{
 				base.load ();
-				Debug.Log ("loaded");
+				Debug.Log (this + " name " + name + " loaded");
 		}
 
 }

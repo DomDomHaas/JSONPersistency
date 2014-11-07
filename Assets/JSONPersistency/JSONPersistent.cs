@@ -4,26 +4,51 @@ using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
 
+[Serializable]
 public abstract class JSONPersistent : MonoBehaviour
 {
+
+		/// <summary>
+		/// This is a copy of the "m_localIndentiferInFile"
+		/// </summary>
+		[SerializeField]	
+		[HideInInspector]
+		private int
+				persistentID = -1;
+
 		/// <summary>
 		/// Is required to save the json
 		/// </summary>
 		protected string fileName;
-
-		/// <summary>
-		/// The identifier don't change
-		/// </summary>
-		private int id = -1;
-
+	
 		public bool loadOnAwake = true;
 		public bool saveOnDestroy = false;
-
-		public bool isInit = false;
+		private bool isInit = false;
+		public bool IsInit {
+				get{ return isInit;}
+				private set{ isInit = value;}
+		}
 
 		protected void Awake ()
 		{
 				init ();
+		}
+
+		private void loadPersistentID ()
+		{
+#if UNITY_EDITOR
+				// only do during the Editor because it uses UnityEditor which isn't in a build
+				// when a object isn't saved yet saved in a scene, the Id is == 0
+				if (!persistentIDisSet ()) {
+						persistentID = JSONPersistor.GetLocalIdentfier (this);
+						//Debug.LogWarning ("set id " + persistentID);
+				}
+#endif
+		}
+
+		public bool persistentIDisSet ()
+		{
+				return (persistentID != -1 && persistentID != 0);
 		}
 
 		/// <summary>
@@ -31,15 +56,11 @@ public abstract class JSONPersistent : MonoBehaviour
 		/// </summary>
 		public void init ()
 		{
-				if (id == -1) {
-						id = JSONPersistor.GetLocalIdentfier (this);
-				}
+				loadPersistentID ();
 
 				fileName = getFileName ();
 		
-				if (loadOnAwake
-		    //&& FileExists ()
-		    ) {
+				if (loadOnAwake && persistentIDisSet () && FileExists ()) {
 						//Debug.Log ("file exists: " + fileName);
 						load ();
 				}
@@ -57,7 +78,7 @@ public abstract class JSONPersistent : MonoBehaviour
 
 		public int getPersistentID ()
 		{
-				return this.id;
+				return this.persistentID;
 		}
 
 		public bool FileExists ()
@@ -67,7 +88,7 @@ public abstract class JSONPersistent : MonoBehaviour
 
 		private string getFileName ()
 		{
-				return this.gameObject.name + "_" + this.id;
+				return this.gameObject.name + "_" + this.persistentID;
 		}
 	
 		public abstract JSONClass getDataClass ();
@@ -107,31 +128,30 @@ public abstract class JSONPersistent : MonoBehaviour
 		public virtual void save ()
 		{
 				JSONClass jClass = getDataClass ();
-				jClass ["id"].AsInt = this.id;
-				//JSONPersistor.Instance.saveToFile (fileName, jClass);
-				JSONPersistor.Instance.savePersitencies (fileName, jClass);
+				jClass ["persistentID"].AsInt = this.persistentID;
+				JSONPersistor.Instance.saveToFile (fileName, jClass);
+				//JSONPersistor.Instance.savePersitencies (fileName, jClass);
 
 				//Debug.Log ("saved " + fileName);
 		}
 
 		public virtual void load ()
 		{
-				JSONClass jClass = JSONPersistor.Instance.loadPersistencies (fileName);
+/*				JSONClass jClass = JSONPersistor.Instance.loadPersistencies (fileName);
 				setClassData (jClass);
+*/
 
-
-/*				if (JSONPersistor.Instance.fileExists (fileName)) {
+				if (JSONPersistor.Instance.fileExists (fileName)) {
 						JSONClass jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
 
-						if (!string.IsNullOrEmpty (jClass ["id"].Value)) {
-								this.id = jClass ["id"].AsInt;
+						if (!string.IsNullOrEmpty (jClass ["persistentID"].Value)) {
+								this.persistentID = jClass ["persistentID"].AsInt;
 						}
 
 						setClassData (jClass);
 				} else {
 						//Debug.LogError ("File with fileName '" + fileName + "' does not exists!");
 				}
-*/
 		}
 
 		static string[] OnWillSaveAssets (string[] paths)

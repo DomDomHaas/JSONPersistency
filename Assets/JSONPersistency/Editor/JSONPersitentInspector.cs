@@ -14,11 +14,29 @@ public class JSONPersitentInspector : Editor
 		private JSONPersistent myPersist;
 
 
+		[ExecuteInEditMode]
+		public void OnEnable ()
+		{
+				myPersist = target as SavingGameObject;
+		
+				//if (!myPersist.IsInit) {
+				myPersist.init ();
+				//}
+		
+		}
+
+
 		public override void OnInspectorGUI ()
 		{    
 				base.DrawDefaultInspector ();
 
 				myPersist = target as JSONPersistent;
+
+				if (myPersist.persistentIDisSet ()) {
+						EditorGUILayout.LabelField ("PersistentID: " + myPersist.getPersistentID ());
+				} else {
+						EditorGUILayout.LabelField ("PersistentID: not loaded yet (save the scene first)");
+				}
 
 				myGUIRect = GUILayoutUtility.GetRect (Screen.width, windowHeight);
 			

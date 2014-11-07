@@ -7,7 +7,6 @@ using System.IO;
 using System.Text; 
 using SimpleJSON;
 using System.Reflection;
-using UnityEditor;
 
 public class JSONPersistor
 {
@@ -321,13 +320,14 @@ public class JSONPersistor
 
 		public static int GetLocalIdentfier (Component comp)
 		{
-				PropertyInfo inspectorModeInfo = typeof(SerializedObject).GetProperty ("inspectorMode", BindingFlags.NonPublic 
+#if UNITY_EDITOR
+				PropertyInfo inspectorModeInfo = typeof(UnityEditor.SerializedObject).GetProperty ("inspectorMode", BindingFlags.NonPublic 
 						| BindingFlags.Instance);
 		
-				SerializedObject serializedObject = new SerializedObject (comp);
-				inspectorModeInfo.SetValue (serializedObject, InspectorMode.Debug, null);
+				UnityEditor.SerializedObject serializedObject = new UnityEditor.SerializedObject (comp);
+				inspectorModeInfo.SetValue (serializedObject, UnityEditor.InspectorMode.Debug, null);
 		
-				SerializedProperty localIdProp = serializedObject.FindProperty ("m_LocalIdentfierInFile");
+				UnityEditor.SerializedProperty localIdProp = serializedObject.FindProperty ("m_LocalIdentfierInFile");
 
 				//AssetModificationProcessor pro = new AssetModificationProcessor();
 
@@ -336,21 +336,28 @@ public class JSONPersistor
 				//Debug.Log ("found property: " + localIdProp.intValue);
 		
 				return localIdProp.intValue;
+#else
+				return -1;
+#endif
 		}
 
 		public static int GetLocalIdentfier (GameObject go)
 		{
-				PropertyInfo inspectorModeInfo = typeof(SerializedObject).GetProperty ("inspectorMode", BindingFlags.NonPublic 
+#if UNITY_EDITOR
+				PropertyInfo inspectorModeInfo = typeof(UnityEditor.SerializedObject).GetProperty ("inspectorMode", BindingFlags.NonPublic 
 						| BindingFlags.Instance);
 		
-				SerializedObject serializedObject = new SerializedObject (go);
-				inspectorModeInfo.SetValue (serializedObject, InspectorMode.Debug, null);
+				UnityEditor.SerializedObject serializedObject = new UnityEditor.SerializedObject (go);
+				inspectorModeInfo.SetValue (serializedObject, UnityEditor.InspectorMode.Debug, null);
 		
-				SerializedProperty localIdProp = serializedObject.FindProperty ("m_LocalIdentfierInFile");
+				UnityEditor.SerializedProperty localIdProp = serializedObject.FindProperty ("m_LocalIdentfierInFile");
 
 				//Debug.Log ("found property: " + localIdProp.intValue);
 
 				return localIdProp.intValue;
+#else
+				return -1;
+#endif
 		}
 
 
