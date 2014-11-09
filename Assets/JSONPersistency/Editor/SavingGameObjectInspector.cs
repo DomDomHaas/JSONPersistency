@@ -1,22 +1,24 @@
 ﻿using UnityEngine;
 using UnityEditor;
-
 using System.Collections; 
 using System.Xml.Serialization; 
 
-[CustomEditor(typeof(SavingGameObject))]
-public class SavingGameObjectInspector : JSONPersitentInspector
-{ 
+namespace JSONPersistency
+{
 
-		[ExecuteInEditMode]
-		public void OnEnable ()
-		{
-				base.OnEnable ();
-		}
+		[CustomEditor(typeof(SavingGameObject))]
+		public class SavingGameObjectInspector : JSONPersitentInspector
+		{ 
 
-		public override void OnInspectorGUI ()
-		{    
-				base.OnInspectorGUI ();
+				[ExecuteInEditMode]
+				new public void OnEnable ()
+				{
+						base.OnEnable ();
+				}
+
+				public override void OnInspectorGUI ()
+				{    
+						base.OnInspectorGUI ();
 
 
 /*				myGUIRect = GUILayoutUtility.GetRect (Screen.width, windowHeight);
@@ -33,9 +35,10 @@ public class SavingGameObjectInspector : JSONPersitentInspector
 
 				EditorGUILayout.EndHorizontal ();
 */		
-		} 
+				} 
 	
 
-} 
+		} 
+}
 
 

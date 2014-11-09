@@ -5,95 +5,98 @@ using System.Collections.Generic;
 using SimpleJSON;
 
 
-[Serializable]
-public abstract class JSONPersistent : MonoBehaviour
+namespace JSONPersistency
 {
 
-		/// <summary>
-		/// This is a copy of the "m_localIndentiferInFile"
-		/// </summary>
-		[SerializeField]	
-		private int
-				persistentID = -1;
+		[Serializable]
+		public abstract class JSONPersistent : MonoBehaviour
+		{
 
-		/// <summary>
-		/// Is required to save the json
-		/// </summary>
-		protected string fileName;
+				/// <summary>
+				/// This is a copy of the "m_localIndentiferInFile"
+				/// </summary>
+				[SerializeField]	
+				private int
+						persistentID = -1;
+
+				/// <summary>
+				/// Is required to save the json
+				/// </summary>
+				protected string fileName;
 	
-		public bool loadOnAwake = true;
-		public bool saveOnDestroy = false;
-		private bool isInit = false;
-		public bool IsInit {
-				get{ return isInit;}
-				private set{ isInit = value;}
-		}
+				public bool loadOnAwake = true;
+				public bool saveOnDestroy = false;
+				private bool isInit = false;
+				public bool IsInit {
+						get{ return isInit;}
+						private set{ isInit = value;}
+				}
 
-		protected void Awake ()
-		{
-				checkstuff ();
-				init ();
-		}
+				protected void Awake ()
+				{
+						checkstuff ();
+						init ();
+				}
 
-		private void loadPersistentID ()
-		{
+				private void loadPersistentID ()
+				{
 #if UNITY_EDITOR
-				// only do during the Editor because it uses UnityEditor which isn't in a build
-				// when a object isn't saved yet saved in a scene, the Id is == 0
-				//if (!persistentIDisSet ()) {
-				persistentID = JSONPersistor.GetLocalIdentfier (this);
-				Debug.LogWarning ("set id " + persistentID);
-				//}
+						// only do during the Editor because it uses UnityEditor which isn't in a build
+						// when a object isn't saved yet saved in a scene, the Id is == 0
+						//if (!persistentIDisSet ()) {
+						persistentID = JSONPersistor.GetLocalIdentfier (this);
+						Debug.LogWarning ("set id " + persistentID);
+						//}
 #endif
-		}
-
-		public bool persistentIDisSet ()
-		{
-				return (persistentID != -1 && persistentID != 0);
-		}
-
-		/// <summary>
-		/// Init this instance, it's public so it can be called from a InspectorScript
-		/// </summary>
-		public void init ()
-		{
-				loadPersistentID ();
-
-				fileName = getFileName ();
-
-				Debug.LogWarning ("file exists: " + fileName + " " + FileExists ());
-
-				if (loadOnAwake && FileExists ()) {
-						load ();
 				}
 
-				isInit = true;
-		}
-
-		private void OnDestroy ()
-		{
-				if (saveOnDestroy) {
-						save ();
+				public bool persistentIDisSet ()
+				{
+						return (persistentID != -1 && persistentID != 0);
 				}
-				//JSONPersistor.Instance.killInstanceID (this.id);
-		}
 
-		public int getPersistentID ()
-		{
-				return this.persistentID;
-		}
+				/// <summary>
+				/// Init this instance, it's public so it can be called from a InspectorScript
+				/// </summary>
+				public void init ()
+				{
+						loadPersistentID ();
 
-		public bool FileExists ()
-		{
-				return JSONPersistor.Instance.fileExists (fileName);
-		}
+						fileName = getFileName ();
 
-		private string getFileName ()
-		{
-				return this.gameObject.name + "_" + this.persistentID;
-		}
+						Debug.LogWarning ("file exists: " + fileName + " " + FileExists ());
+
+						if (loadOnAwake && FileExists ()) {
+								load ();
+						}
+
+						isInit = true;
+				}
+
+				private void OnDestroy ()
+				{
+						if (saveOnDestroy) {
+								save ();
+						}
+						//JSONPersistor.Instance.killInstanceID (this.id);
+				}
+
+				public int getPersistentID ()
+				{
+						return this.persistentID;
+				}
+
+				public bool FileExists ()
+				{
+						return JSONPersistor.Instance.fileExists (fileName);
+				}
+
+				private string getFileName ()
+				{
+						return this.gameObject.name + "_" + this.persistentID;
+				}
 	
-		public abstract JSONClass getDataClass ();
+				public abstract JSONClass getDataClass ();
 
 /* example:
  * protected JSONClass getDataClass ()
@@ -108,7 +111,7 @@ public abstract class JSONPersistent : MonoBehaviour
 	}
 */
 
-		public abstract void setClassData (JSONClass jClass);
+				public abstract void setClassData (JSONClass jClass);
 
 /* example:
  * 
@@ -127,87 +130,88 @@ public abstract class JSONPersistent : MonoBehaviour
 		return node.AsObject;
 	}*/
 
-		public virtual void save ()
-		{
-				JSONClass jClass = getDataClass ();
-				jClass ["persistentID"].AsInt = this.persistentID;
-				JSONPersistor.Instance.saveToFile (fileName, jClass);
-				//JSONPersistor.Instance.savePersitencies (fileName, jClass);
+				public virtual void save ()
+				{
+						JSONClass jClass = getDataClass ();
+						jClass ["persistentID"].AsInt = this.persistentID;
+						JSONPersistor.Instance.saveToFile (fileName, jClass);
+						//JSONPersistor.Instance.savePersitencies (fileName, jClass);
 
-				//Debug.Log ("saved " + fileName);
-		}
+						//Debug.Log ("saved " + fileName);
+				}
 
-		public virtual void load ()
-		{
+				public virtual void load ()
+				{
 /*				JSONClass jClass = JSONPersistor.Instance.loadPersistencies (fileName);
 				setClassData (jClass);
 */
 
-				if (JSONPersistor.Instance.fileExists (fileName)) {
-						JSONClass jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
+						if (JSONPersistor.Instance.fileExists (fileName)) {
+								JSONClass jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
 
-						if (!string.IsNullOrEmpty (jClass ["persistentID"].Value)) {
-								this.persistentID = jClass ["persistentID"].AsInt;
+								if (!string.IsNullOrEmpty (jClass ["persistentID"].Value)) {
+										this.persistentID = jClass ["persistentID"].AsInt;
+								}
+
+								setClassData (jClass);
+						} else {
+								//Debug.LogError ("File with fileName '" + fileName + "' does not exists!");
 						}
-
-						setClassData (jClass);
-				} else {
-						//Debug.LogError ("File with fileName '" + fileName + "' does not exists!");
 				}
-		}
 
 
 
 	#region instance_handling
 
-		private static List<WeakReference> instances = new List<WeakReference> ();
+				private static List<WeakReference> instances = new List<WeakReference> ();
 	
-		public JSONPersistent ()
-		{
-				instances.Add (new WeakReference (this));
-		}
-
-		public static IList<JSONPersistent> GetInstances ()
-		{
-				List<JSONPersistent> realInstances = new List<JSONPersistent> ();
-				List<WeakReference> toDelete = new List<WeakReference> ();
-		
-				foreach (WeakReference reference in instances) {
-						if (reference.IsAlive) {
-								realInstances.Add ((JSONPersistent)reference.Target);
-						} else {
-								toDelete.Add (reference);
-						}
+				public JSONPersistent ()
+				{
+						instances.Add (new WeakReference (this));
 				}
+
+				public static IList<JSONPersistent> GetInstances ()
+				{
+						List<JSONPersistent> realInstances = new List<JSONPersistent> ();
+						List<WeakReference> toDelete = new List<WeakReference> ();
 		
-				foreach (WeakReference reference in toDelete)
-						instances.Remove (reference);
+						foreach (WeakReference reference in instances) {
+								if (reference.IsAlive) {
+										realInstances.Add ((JSONPersistent)reference.Target);
+								} else {
+										toDelete.Add (reference);
+								}
+						}
 		
-				return realInstances;
-		}
+						foreach (WeakReference reference in toDelete)
+								instances.Remove (reference);
+		
+						return realInstances;
+				}
 
 
 	#endregion
 
 	#region workaround
 
-		private void checkstuff ()
-		{
+				private void checkstuff ()
+				{
 /*				System.Runtime.Serialization.SerializationObjectManager manager = new System.Runtime.Serialization.SerializationObjectManager ();
 
 		System.Runtime.Serialization.con
 */
-		}
+				}
 
 
-		static string[] OnWillSaveAssets (string[] paths)
-		{
-				Debug.Log ("OnWillSaveAssets");
-				foreach (string path in paths)
-						Debug.Log (path);
-				return paths;
-		}
+				static string[] OnWillSaveAssets (string[] paths)
+				{
+						Debug.Log ("OnWillSaveAssets");
+						foreach (string path in paths)
+								Debug.Log (path);
+						return paths;
+				}
 	
 	
 	#endregion
+		}
 }

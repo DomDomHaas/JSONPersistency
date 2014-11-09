@@ -1,60 +1,67 @@
 ﻿using UnityEngine;
 using UnityEditor;
-
 using System.Collections; 
 using System.Xml.Serialization; 
 
-[CustomEditor(typeof(JSONPersistent))]
-public class JSONPersitentInspector : Editor
-{ 
+namespace JSONPersistency
+{
 
-		public float windowHeight = 16;
-		public Rect myGUIRect;
+		[CustomEditor(typeof(JSONPersistent))]
+		public class JSONPersitentInspector : Editor
+		{ 
 
-		private JSONPersistent myPersist;
+				public float windowHeight = 16;
+				public Rect myGUIRect;
+
+				private JSONPersistent myPersist;
 
 
-		[ExecuteInEditMode]
-		public void OnEnable ()
-		{
-				myPersist = target as SavingGameObject;
+				[ExecuteInEditMode]
+				public void OnEnable ()
+				{
+						myPersist = target as SavingGameObject;
 		
-				//if (!myPersist.IsInit) {
-				myPersist.init ();
-				//}
+						//if (!myPersist.IsInit) {
+						myPersist.init ();
+						//}
 		
-		}
-
-
-		public override void OnInspectorGUI ()
-		{    
-				base.DrawDefaultInspector ();
-
-				myPersist = target as JSONPersistent;
-
-				if (myPersist.persistentIDisSet ()) {
-						EditorGUILayout.LabelField ("PersistentID: " + myPersist.getPersistentID ());
-				} else {
-						EditorGUILayout.LabelField ("PersistentID: not loaded yet (save the scene first)");
 				}
 
-				myGUIRect = GUILayoutUtility.GetRect (Screen.width, windowHeight);
+				public void checkPersist ()
+				{
+						Debug.Log ("checkPersist");
+				}
+
+				public override void OnInspectorGUI ()
+				{    
+						base.DrawDefaultInspector ();
+
+						myPersist = target as JSONPersistent;
+
+						if (myPersist.persistentIDisSet ()) {
+								EditorGUILayout.LabelField ("PersistentID: " + myPersist.getPersistentID ());
+						} else {
+								EditorGUILayout.LabelField ("PersistentID: not loaded yet (save the scene first)");
+						}
+
+						myGUIRect = GUILayoutUtility.GetRect (Screen.width, windowHeight);
 			
-				EditorGUILayout.BeginHorizontal ();
+						EditorGUILayout.BeginHorizontal ();
 
-				if (GUILayout.Button ("Load")) { 
-						myPersist.load ();
-				} 
+						if (GUILayout.Button ("Load")) { 
+								myPersist.load ();
+						} 
 
-				if (GUILayout.Button ("Save")) { 
-						myPersist.save ();
-				} 
+						if (GUILayout.Button ("Save")) { 
+								myPersist.save ();
+						} 
 
-				EditorGUILayout.EndHorizontal ();
+						EditorGUILayout.EndHorizontal ();
 		
-		} 
+				} 
 	
 
-} 
+		} 
 
 
+}
