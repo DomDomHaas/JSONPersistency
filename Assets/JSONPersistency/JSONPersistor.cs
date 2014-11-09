@@ -10,11 +10,11 @@ using System.Reflection;
 
 public class JSONPersistor
 {
-
-		public static readonly string filePath = "/SaveLoadObjects";
+		public static readonly string filePath = "/Resources/SaveLoadObjects";
 		public static readonly string PersistorFileName = "JSONSaves";
 		private static readonly string persistentClasses = "persist";
 
+	
 /*		public static readonly string startArray = "{";
 		public static readonly string endArray = "}";
 		public static readonly string nextEntry = ",";

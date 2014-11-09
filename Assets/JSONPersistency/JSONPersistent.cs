@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
 
+
 [Serializable]
 public abstract class JSONPersistent : MonoBehaviour
 {
@@ -12,7 +13,6 @@ public abstract class JSONPersistent : MonoBehaviour
 		/// This is a copy of the "m_localIndentiferInFile"
 		/// </summary>
 		[SerializeField]	
-		[HideInInspector]
 		private int
 				persistentID = -1;
 
@@ -31,6 +31,7 @@ public abstract class JSONPersistent : MonoBehaviour
 
 		protected void Awake ()
 		{
+				checkstuff ();
 				init ();
 		}
 
@@ -39,10 +40,10 @@ public abstract class JSONPersistent : MonoBehaviour
 #if UNITY_EDITOR
 				// only do during the Editor because it uses UnityEditor which isn't in a build
 				// when a object isn't saved yet saved in a scene, the Id is == 0
-				if (!persistentIDisSet ()) {
-						persistentID = JSONPersistor.GetLocalIdentfier (this);
-						//Debug.LogWarning ("set id " + persistentID);
-				}
+				//if (!persistentIDisSet ()) {
+				persistentID = JSONPersistor.GetLocalIdentfier (this);
+				Debug.LogWarning ("set id " + persistentID);
+				//}
 #endif
 		}
 
@@ -59,9 +60,10 @@ public abstract class JSONPersistent : MonoBehaviour
 				loadPersistentID ();
 
 				fileName = getFileName ();
-		
-				if (loadOnAwake && persistentIDisSet () && FileExists ()) {
-						//Debug.Log ("file exists: " + fileName);
+
+				Debug.LogWarning ("file exists: " + fileName + " " + FileExists ());
+
+				if (loadOnAwake && FileExists ()) {
 						load ();
 				}
 
@@ -154,13 +156,7 @@ public abstract class JSONPersistent : MonoBehaviour
 				}
 		}
 
-		static string[] OnWillSaveAssets (string[] paths)
-		{
-				Debug.Log ("OnWillSaveAssets");
-				foreach (string path in paths)
-						Debug.Log (path);
-				return paths;
-		}
+
 
 	#region instance_handling
 
@@ -190,6 +186,28 @@ public abstract class JSONPersistent : MonoBehaviour
 				return realInstances;
 		}
 
+
 	#endregion
 
+	#region workaround
+
+		private void checkstuff ()
+		{
+/*				System.Runtime.Serialization.SerializationObjectManager manager = new System.Runtime.Serialization.SerializationObjectManager ();
+
+		System.Runtime.Serialization.con
+*/
+		}
+
+
+		static string[] OnWillSaveAssets (string[] paths)
+		{
+				Debug.Log ("OnWillSaveAssets");
+				foreach (string path in paths)
+						Debug.Log (path);
+				return paths;
+		}
+	
+	
+	#endregion
 }
