@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
+using System.Runtime.Serialization;
 
 
 namespace JSONPersistency
@@ -34,21 +35,25 @@ namespace JSONPersistency
 
 				protected void Awake ()
 				{
-						checkstuff ();
 						init ();
 				}
 
-				private void loadPersistentID ()
+		#region workaround
+		
+		
+				public void loadPersistentID ()
 				{
 #if UNITY_EDITOR
 						// only do during the Editor because it uses UnityEditor which isn't in a build
 						// when a object isn't saved yet saved in a scene, the Id is == 0
 						//if (!persistentIDisSet ()) {
 						persistentID = JSONPersistor.GetLocalIdentfier (this);
-						Debug.LogWarning ("set id " + persistentID);
+						//Debug.LogWarning ("set id " + persistentID);
 						//}
 #endif
 				}
+
+		#endregion
 
 				public bool persistentIDisSet ()
 				{
@@ -64,7 +69,7 @@ namespace JSONPersistency
 
 						fileName = getFileName ();
 
-						Debug.LogWarning ("file exists: " + fileName + " " + FileExists ());
+						//Debug.LogWarning ("file exists: " + fileName + " " + FileExists ());
 
 						if (loadOnAwake && FileExists ()) {
 								load ();
@@ -78,7 +83,7 @@ namespace JSONPersistency
 						if (saveOnDestroy) {
 								save ();
 						}
-						//JSONPersistor.Instance.killInstanceID (this.id);
+
 				}
 
 				public int getPersistentID ()
@@ -192,26 +197,6 @@ namespace JSONPersistency
 
 	#endregion
 
-	#region workaround
 
-				private void checkstuff ()
-				{
-/*				System.Runtime.Serialization.SerializationObjectManager manager = new System.Runtime.Serialization.SerializationObjectManager ();
-
-		System.Runtime.Serialization.con
-*/
-				}
-
-
-				static string[] OnWillSaveAssets (string[] paths)
-				{
-						Debug.Log ("OnWillSaveAssets");
-						foreach (string path in paths)
-								Debug.Log (path);
-						return paths;
-				}
-	
-	
-	#endregion
 		}
 }

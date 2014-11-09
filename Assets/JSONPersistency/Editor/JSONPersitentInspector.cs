@@ -15,16 +15,11 @@ namespace JSONPersistency
 
 				private JSONPersistent myPersist;
 
-
 				[ExecuteInEditMode]
 				public void OnEnable ()
 				{
-						myPersist = target as SavingGameObject;
-		
-						//if (!myPersist.IsInit) {
+						myPersist = target as SavingGameObject;		
 						myPersist.init ();
-						//}
-		
 				}
 
 				public void checkPersist ()
