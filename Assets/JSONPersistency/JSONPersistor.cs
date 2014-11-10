@@ -71,6 +71,7 @@ namespace JSONPersistency
 
 				public string getFullFilePath (string fileName)
 				{
+						//Debug.Log ("getFullFilePath: " + Application.dataPath + FilePathInUnity + "/" + fileName + ".txt");
 						return Application.dataPath + FilePathInUnity + "/" + fileName + ".txt";
 				}
 
@@ -90,7 +91,7 @@ namespace JSONPersistency
 								savePersistency [persistentClasses].Add (kvp.Key, kvp.Value);
 						}
 
-						Debug.Log ("should save " + savePersistency.AsObject.ToString ());
+						//Debug.Log ("savePersitencies: should save " + savePersistency.AsObject.ToString ());
 
 						savePersistency.SaveToFile (getFullFilePath (PersistorFileName));
 				}
@@ -100,6 +101,9 @@ namespace JSONPersistency
 						if (data.Count <= 0) {
 								throw new UnityException ("saveToFile: JSONClass data is empty!");
 						} else {
+
+								//Debug.Log ("saveToFile: should save " + fileName + " data: " + data.ToString ());
+
 								// SaveToFile already creates directories and the file!
 								data.SaveToFile (getFullFilePath (fileName));
 						}
@@ -122,7 +126,7 @@ namespace JSONPersistency
 
 				public JSONClass loadPersistencies (string objname)
 				{
-						Debug.Log ("loadPersistencies " + objname + " from " + persistencies.Count);
+						//Debug.Log ("loadPersistencies " + objname + " from " + persistencies.Count);
 
 						if (persistencies.Count > 0 && persistencies.ContainsKey (objname)) {
 								return persistencies [objname];

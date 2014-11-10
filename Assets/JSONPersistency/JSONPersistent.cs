@@ -69,9 +69,9 @@ namespace JSONPersistency
 
 						fileName = getFileName ();
 
-						//Debug.LogWarning ("file exists: " + fileName + " " + FileExists ());
+						//Debug.LogWarning ("file exists: " + fileName + " " + JSONPersistor.Instance.fileExists (fileName));
 
-						if (loadOnAwake && FileExists ()) {
+						if (loadOnAwake) {
 								load ();
 						}
 
@@ -89,11 +89,6 @@ namespace JSONPersistency
 				public int getPersistentID ()
 				{
 						return this.persistentID;
-				}
-
-				public bool FileExists ()
-				{
-						return JSONPersistor.Instance.fileExists (fileName);
 				}
 
 				private string getFileName ()
@@ -138,6 +133,8 @@ namespace JSONPersistency
 				public virtual void save ()
 				{
 						JSONClass jClass = getDataClass ();
+						//Debug.Log ("going to save " + jClass.ToString ());
+
 						jClass ["persistentID"].AsInt = this.persistentID;
 						JSONPersistor.Instance.saveToFile (fileName, jClass);
 						//JSONPersistor.Instance.savePersitencies (fileName, jClass);

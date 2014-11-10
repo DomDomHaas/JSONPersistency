@@ -18,7 +18,7 @@ namespace JSONPersistency
 				// add the JSONPersistor.filePath to the build!
 				public static void OnPostProcessBuild (BuildTarget target, string path)
 				{
-						Debug.Log ("OnPostProcessBuild target " + target + " path " + path);
+						//Debug.Log ("OnPostProcessBuild target " + target + " path " + path);
 
 						// Get Required Paths
 						//DirectoryInfo projectParent = Directory.GetParent (Application.dataPath);
@@ -35,14 +35,14 @@ namespace JSONPersistency
 						string buildDataDir = targetdir.FullName + divider + buildname + dataMarker + JSONPersistor.FilePathInUnity;
 						string unitySourceFolder = projectParent.ToString () + JSONPersistor.FilePathInUnity;
 
-						Debug.Log ("copy all from " + unitySourceFolder + " to " + buildDataDir.ToString ());
+						//Debug.Log ("copy all from " + unitySourceFolder + " to " + buildDataDir.ToString ());
 
 						filecount = 0;
 						dircount = 0;
 
 						CopyAll (new DirectoryInfo (unitySourceFolder), new DirectoryInfo (buildDataDir));
 
-						Debug.Log ("Copied: " + filecount + " file" + ((filecount != 1) ? "s" : "") + ", " + dircount + " folder" + ((dircount != 1) ? "s" : ""));
+						//Debug.Log ("Copied: " + filecount + " file" + ((filecount != 1) ? "s" : "") + ", " + dircount + " folder" + ((dircount != 1) ? "s" : ""));
 				}
 
 

@@ -17,25 +17,25 @@ public class SaveSceneHook : AssetModificationProcessor
 		}*/
 
 	
-	static string[] OnWillSaveAssets (string[] paths)
-	{
+		static string[] OnWillSaveAssets (string[] paths)
+		{
 
-		Object[] objs = Component.FindObjectsOfType (typeof(JSONPersistent));
+				Object[] objs = Component.FindObjectsOfType (typeof(JSONPersistent));
 
-		//Debug.Log ("OnWillSaveAssets " + objs.Length);
+				//Debug.Log ("OnWillSaveAssets " + objs.Length);
 
-		foreach (Object obj in objs) {
-			JSONPersistent persist = (JSONPersistent)obj;
-			if (!persist.persistentIDisSet ()) {
-				persist.loadPersistentID ();
-				//Debug.Log (persist.name + " loaded!  persistID: " + persist.getPersistentID ());
+				foreach (Object obj in objs) {
+						JSONPersistent persist = (JSONPersistent)obj;
+						if (!persist.persistentIDisSet ()) {
+								persist.loadPersistentID ();
+								//Debug.Log (persist.name + " loaded!  persistID: " + persist.getPersistentID ());
 
-			} else {
-				//Debug.Log (persist.name + " persistID: " + persist.getPersistentID ());
-			}
+						} else {
+								//Debug.Log (persist.name + " persistID: " + persist.getPersistentID ());
+						}
+				}
+
+				return paths;
 		}
-
-		return paths;
-	}
 	
 } 
