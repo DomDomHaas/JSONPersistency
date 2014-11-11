@@ -54,13 +54,13 @@ public class SavingGameObject : JSONPersistent
 		public override void save ()
 		{
 				base.save ();
-				Debug.Log ("name " + name + " persistentID " + this.getPersistentID () + " saved");
+				//Debug.Log ("name " + name + " persistentID " + this.getPersistentID () + " saved");
 		}
 
 		public override void load ()
 		{
 				base.load ();
-				Debug.Log ("name " + name + " persistentID " + this.getPersistentID () + " loaded");
+				//Debug.Log ("name " + name + " persistentID " + this.getPersistentID () + " loaded");
 		}
 
 }
