@@ -26,7 +26,6 @@ namespace JSONPersistency
 				{    
 						base.DrawDefaultInspector ();
 
-						myPersist = target as JSONPersistent;
 
 						if (myPersist.persistentIDisSet ()) {
 								EditorGUILayout.LabelField ("PersistentID: " + myPersist.getPersistentID ());
