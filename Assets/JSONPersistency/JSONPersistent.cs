@@ -24,7 +24,9 @@ namespace JSONPersistency
 				/// Is required to save the json
 				/// </summary>
 				protected string fileName;
-	
+
+				protected bool useIndividualFiles = true;
+
 				public bool loadOnAwake = true;
 				public bool saveOnDestroy = false;
 				private bool isInit = false;
@@ -136,8 +138,11 @@ namespace JSONPersistency
 						//Debug.Log ("going to save " + jClass.ToString ());
 
 						jClass ["persistentID"].AsInt = this.persistentID;
-						JSONPersistor.Instance.saveToFile (fileName, jClass);
-						//JSONPersistor.Instance.savePersitencies (fileName, jClass);
+						if (useIndividualFiles) {
+								JSONPersistor.Instance.saveToFile (fileName, jClass);
+						} else {
+								JSONPersistor.Instance.savePersitencies (fileName, jClass);
+						}
 
 						//Debug.Log ("saved " + fileName);
 				}
@@ -149,7 +154,12 @@ namespace JSONPersistency
 */
 
 						if (JSONPersistor.Instance.fileExists (fileName)) {
-								JSONClass jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
+								JSONClass jClass = null;
+								if (useIndividualFiles) {
+										jClass = JSONPersistor.Instance.loadJSONClassFromFile (fileName);
+								} else {
+										jClass = JSONPersistor.Instance.loadPersistencies (fileName);
+								}
 
 								if (!string.IsNullOrEmpty (jClass ["persistentID"].Value)) {
 										this.persistentID = jClass ["persistentID"].AsInt;
