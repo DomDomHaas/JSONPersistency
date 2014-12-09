@@ -6,8 +6,8 @@ using System.Xml.Serialization;
 namespace JSONPersistency
 {
 
-		[CustomEditor(typeof(SavingGameObject))]
-		public class SavingGameObjectInspector : JSONPersitentInspector
+		[CustomEditor(typeof(SaveTransform))]
+		public class SaveTransformInspector : JSONPersitentInspector
 		{ 
 
 				[ExecuteInEditMode]
