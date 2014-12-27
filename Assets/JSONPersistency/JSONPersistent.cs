@@ -26,6 +26,7 @@ namespace JSONPersistency
 				protected string fileName;
 
 				protected bool useIndividualFiles = true;
+				protected bool usePersistentFiles = true;
 
 				public bool loadOnAwake = true;
 				public bool saveOnDestroy = false;
@@ -67,9 +68,13 @@ namespace JSONPersistency
 				/// </summary>
 				public void init ()
 				{
-						loadPersistentID ();
+						if (useIndividualFiles) {
+								loadPersistentID ();
+						}
 
-						fileName = getFileName ();
+						if (usePersistentFiles) {
+								fileName = getFileName ();
+						}
 
 						//Debug.LogWarning ("file exists: " + fileName + " " + JSONPersistor.Instance.fileExists (fileName));
 
