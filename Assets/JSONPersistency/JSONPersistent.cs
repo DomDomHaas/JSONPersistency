@@ -51,9 +51,12 @@ namespace JSONPersistency
 						// when a object isn't saved yet saved in a scene, the Id is == 0
 						//if (!persistentIDisSet ()) {
 						persistentID = JSONPersistor.GetLocalIdentfier (this);
+						UnityEditor.EditorUtility.SetDirty (this);
 						//Debug.LogWarning ("set id " + persistentID);
 						//}
+
 #endif
+						loadFileName ();
 				}
 
 		#endregion
@@ -71,12 +74,6 @@ namespace JSONPersistency
 						if (useIndividualFiles) {
 								loadPersistentID ();
 						}
-
-						if (usePersistentFiles) {
-								fileName = getFileName ();
-						}
-
-						//Debug.LogWarning ("file exists: " + fileName + " " + JSONPersistor.Instance.fileExists (fileName));
 
 						if (loadOnAwake) {
 								load ();
@@ -98,9 +95,11 @@ namespace JSONPersistency
 						return this.persistentID;
 				}
 
-				private string getFileName ()
+				public void loadFileName ()
 				{
-						return this.gameObject.name + "_" + this.persistentID;
+						if (usePersistentFiles) {
+								fileName = this.gameObject.name + "_" + this.persistentID;
+						}
 				}
 	
 				public abstract JSONClass getDataClass ();
