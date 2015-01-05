@@ -24,6 +24,7 @@ namespace JSONPersistency
 				/// Is required to save the json
 				/// </summary>
 				protected string fileName;
+				protected string specficSubFolder = "";
 
 				protected bool useIndividualFiles = true;
 				protected bool usePersistentFiles = true;
@@ -99,6 +100,9 @@ namespace JSONPersistency
 				{
 						if (usePersistentFiles) {
 								fileName = this.gameObject.name + "_" + this.persistentID;
+								if (!string.IsNullOrEmpty (specficSubFolder)) {
+										fileName = specficSubFolder + "/" + fileName;
+								}
 						}
 				}
 	
