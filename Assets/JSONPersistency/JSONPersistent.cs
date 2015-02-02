@@ -9,6 +9,14 @@ using System.Runtime.Serialization;
 namespace JSONPersistency
 {
 
+		/// <summary>
+		/// JSON persistent is the basic abstract class for storing a GameObjects data in a file.
+		/// The following options change how the data is stored:
+		/// - <c>useIndividualFiles</c> defines if the data should be stored in a separate file for every instance (doesn't work for instances created during runtime)
+		/// - <c>usePersistentFiles</c> defines if the fileName which the data is written to is created with then persitentID for this GameObject.
+		/// - <c>loadOnAwake</c> if TRUE the data is loaded during the Awake of the GameObject
+		/// - <c>saveOnDestroy</c> if TRUE the data is stored once the GameObject is destroyed
+		/// </summary>
 		[Serializable]
 		public abstract class JSONPersistent : MonoBehaviour
 		{
@@ -21,7 +29,7 @@ namespace JSONPersistency
 						persistentID = -1;
 
 				/// <summary>
-				/// Is required to save the json
+				/// Is required to save the json, if <c>usePersistentFiles</c> is FALSE you have to set the fileName by yourself.
 				/// </summary>
 				protected string fileName;
 				protected string specficSubFolder = "";
@@ -57,7 +65,6 @@ namespace JSONPersistency
 						//}
 
 #endif
-						loadFileName ();
 				}
 
 		#endregion
@@ -74,6 +81,7 @@ namespace JSONPersistency
 				{
 						if (useIndividualFiles) {
 								loadPersistentID ();
+								loadFileName ();
 						}
 
 						if (loadOnAwake) {
