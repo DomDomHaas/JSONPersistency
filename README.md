@@ -7,4 +7,19 @@ There is the possiblity to connect a file directly with an Monobehaviour and kee
 This version is in a bit a raw state, better comments and more examples are in the making.
 
 There is a basic API Doc:
+
 http://dominikhaas.ch/JSONPersistency/namespace_j_s_o_n_persistency.html
+
+---
+
+Example of saving a Transform:
+
+![SaveTransform](https://raw.githubusercontent.com/DomDomHaas/JSONPersistency/master/JSONPersist_Savetransform.jpg)
+
+
+---
+
+Persistency is done via localIdentifier from the scene:
+
+![SavingTheLocalIdentifier](https://raw.githubusercontent.com/DomDomHaas/JSONPersistency/master/local_identifier.jpg)
+
