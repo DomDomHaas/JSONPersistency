@@ -12,6 +12,9 @@ using System.Reflection;
 namespace JSONPersistency
 {
 
+		/// <summary>
+		/// JSON persistor capsuls the connection the SimpleJSON.
+		/// </summary>
 		public class JSONPersistor
 		{
 				public static readonly string FilePathInUnity = "/JSONPersistency/SaveLoadObjects";
