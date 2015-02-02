@@ -7,4 +7,4 @@ There is the possiblity to connect a file directly with an Monobehaviour and kee
 This version is in a bit an undocumented state, that's soon to change.
 
 API:
-http://dominikhaas.ch/JSONPersistency/
+http://dominikhaas.ch/JSONPersistency/namespaces.html
