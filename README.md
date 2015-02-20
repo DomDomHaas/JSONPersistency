@@ -8,7 +8,6 @@ This version is in a bit a raw state, better comments and more examples are in t
 
 But here is an example to save a Transform:
 
-{% highlight c# %}
 
 		public override JSONClass getDataClass ()
 		{
@@ -33,11 +32,9 @@ But here is an example to save a Transform:
 				return jClass;
 		}
 		
-{% endhighlight %}
 
 Loading the Transform Information:
 
-{% highlight c# %}
 
 		public override void setClassData (JSONClass jClass)
 		{
@@ -60,7 +57,6 @@ Loading the Transform Information:
 		                                    jClass ["scale_z"].AsFloat);
 		}
 		
-{% endhighlight %}
 
 There is a basic API Doc:
 
