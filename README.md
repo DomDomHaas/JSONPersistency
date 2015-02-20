@@ -1,12 +1,12 @@
 # JSONPersistency
-Easy way to save and load the data of GameObjects in Unity3D
+Easy way to save and load the data of GameObjects in Unity3D.
 
 This asset gives the possibility to save any kind of GameState data into a file.
 There is the possiblity to connect a file directly with an Monobehaviour and keep it persistent in a JSONFile.
 
-This version is in a bit a raw state, better comments and more examples are in the making.
+This version is in a bit a raw state, better comments and more examples are in the making. It's based on SimpleJSON.
 
-But here is an example to save a Transform:
+But here is an example(https://github.com/DomDomHaas/JSONPersistency/blob/master/Assets/JSONPersistency/examples/SaveTransform.cs) to save a Transform:
 
 
 		public override JSONClass getDataClass ()
