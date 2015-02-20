@@ -9,6 +9,7 @@ This version is in a bit a raw state, better comments and more examples are in t
 But here is an example to save a Transform:
 
 {% highlight c# %}
+
 		public override JSONClass getDataClass ()
 		{
 				JSONClass jClass = new JSONClass ();
@@ -31,11 +32,13 @@ But here is an example to save a Transform:
 		
 				return jClass;
 		}
+		
 {% endhighlight %}
 
 Loading the Transform Information:
 
 {% highlight c# %}
+
 		public override void setClassData (JSONClass jClass)
 		{
 				transform.position = new Vector3 (jClass ["world_x"].AsFloat,
@@ -56,6 +59,7 @@ Loading the Transform Information:
 		                                    jClass ["scale_y"].AsFloat,
 		                                    jClass ["scale_z"].AsFloat);
 		}
+		
 {% endhighlight %}
 
 There is a basic API Doc:
